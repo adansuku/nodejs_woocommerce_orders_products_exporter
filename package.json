@@ -1,5 +1,26 @@
 {
+  "name": "nodejs_woocommerce_exporter",
+  "version": "1.0.0",
+  "description": "A Node.js app for exporting WooCommerce orders and products.",
+  "main": "export.js",
+  "scripts": {
+    "start": "node export.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adansuku/nodejs_woocommerce_orders_products_exporter.git"
+  },
+  "author": "Adán González",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adansuku/nodejs_woocommerce_orders_products_exporter/issues"
+  },
+  "homepage": "https://github.com/adansuku/nodejs_woocommerce_orders_products_exporter#readme",
   "dependencies": {
-    "dotenv": "^16.3.1"
-  }
+    "csv-stringify": "^6.4.4",
+    "dotenv": "^16.3.1",
+    "ftp": "^0.3.10"
+  },
+  "devDependencies": {}
 }
