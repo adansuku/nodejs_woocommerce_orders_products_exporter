@@ -2,9 +2,9 @@ const WooCommerceAdapter = require('./adapters/woocommerceAdapter');
 const CsvAdapter = require('./adapters/csvAdapter');
 const FtpAdapter = require('./adapters/ftpAdapter');
 const { parsed_orders, parsed_products } = require('./services/dataProcessor');
-require('dotenv').config()
+require('dotenv').config();
 
-// Configuración del servidor FTP con SSL
+// FTP Server Configuration with SSL
 const ftpConfig = {
 	host: process.env.FTP_HOST,
 	port: process.env.FTP_PORT,
@@ -17,9 +17,9 @@ const wooCommerceConfig = {
 	consumerKey: process.env.WOO_CONSUMER_KEY,  // Your consumer key
 	consumerSecret: process.env.WOO_CONSUMER_SECRET, // Your consumer secret
 	version: process.env.WOO_API_VERSION,  // WooCommerce WP REST API version
-}
+};
 
-// Instancias de adaptadores
+// Adapter Instances
 const wooCommerceAdapter = new WooCommerceAdapter(wooCommerceConfig);
 const csvAdapter = new CsvAdapter();
 const ftpAdapter = new FtpAdapter(ftpConfig);
@@ -29,26 +29,27 @@ async function mainWorkflow() {
 		const startDate = new Date(2023, 9, 1);
 		const orders = await wooCommerceAdapter.getOrders(startDate);
 
-		if (orders) {
-			console.log(orders)
-			// 2. Procesar esos pedidos para generar datos
-			const productsData = parsed_products(orders); // Asegúrate de que esta función esté bien definida
+		if (orders.length > 0) {
+			const productsData = parsed_products(orders);
 			const ordersData = parsed_orders(orders);
 
-			// 3. Exportar esos datos a archivos CSV
+			console.log("Saving files ...");
 			const productsCsvPath = await csvAdapter.exportDataToCsv(productsData, 'products');
-			const ordersCsvPath = await csvAdapter.exportDataToCsv(ordersData, 'orders');// Asegúrate de que esta función esté bien definida
+			const ordersCsvPath = await csvAdapter.exportDataToCsv(ordersData, 'orders');
 
-			// 4. Subir los archivos CSV al servidor FTP
+			console.log("Uploading files to FTP ...");
 			// await ftpAdapter.uploadFile(productsCsvPath);
 			// await ftpAdapter.uploadFile(ordersCsvPath);
-			console.log('Todos los procesos han sido completados exitosamente.');
+
+			console.log('All processes have been successfully completed.');
+		} else {
+			console.log('No orders found to process.');
 		}
 
 	} catch (error) {
-		console.error('Error en el flujo de trabajo principal:', error);
+		console.error('Error in the main workflow:', error);
+		// Here you can add logic to handle or revert previous operations if necessary
 	}
 }
 
-mainWorkflow()
-
+mainWorkflow();
