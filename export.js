@@ -38,8 +38,8 @@ async function mainWorkflow() {
 			const ordersCsvPath = await csvAdapter.exportDataToCsv(ordersData, 'orders');
 
 			console.log("Uploading files to FTP ...");
-			// await ftpAdapter.uploadFile(productsCsvPath);
-			// await ftpAdapter.uploadFile(ordersCsvPath);
+			await ftpAdapter.uploadFile(productsCsvPath);
+			await ftpAdapter.uploadFile(ordersCsvPath);
 
 			console.log('All processes have been successfully completed.');
 		} else {
